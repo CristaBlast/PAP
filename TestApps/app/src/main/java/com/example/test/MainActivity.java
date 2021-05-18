@@ -15,6 +15,7 @@ import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraDevice;
 import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,13 +80,13 @@ public class MainActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-//            try {
-//                openCamera();
-//            }
-//            catch (CameraAccessException e)
-//            {
-//                e.printStackTrace();
-//            }
+            try {
+                openCamera();
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+            }
 
         }
 
@@ -104,6 +106,76 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void onOpened(CameraDevice camera) {
+            cameraDevice = camera;
+            try {
+                createCameraPreview();
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onDisconnected(CameraDevice camera) {
+            cameraDevice.close();
+        }
+
+        @Override
+        public void onError(CameraDevice camera, int error) {
+            cameraDevice.close();
+            cameraDevice = null;
+        }
+    };
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void createCameraPreview()
+    {
+        SurfaceTexture texture = textureView.getSurfaceTexture();
+        texture.setDefaultBufferSize(imageDimensions.getWidth(),imageDimensions.getHeight());
+        Surface surface = new Surface(texture);
+        captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+        captureRequestBuilder.addTarget(surface);
+        cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback()
+        {
+            @Override
+            public void onConfigured(CameraCaptureSession session)
+            {
+                if(cameraDevice == null)
+                {
+                    return;
+                }
+                cameraCaptureSession = session;
+                try {
+                    updatePreview();
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onConfigureFailed(CameraCaptureSession session)
+            {
+                Toast.makeText(getApplicationContext(),"Configuration Changed",Toast.LENGTH_LONG).show();
+            }
+        },null);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void updatePreview() throws CameraAccessException {
+        if(cameraDevice == null)
+        {
+            return;
+        }
+        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+        cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(),null,mBackgroundHandler);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void openCamera() {
         CameraManager manager = (CameraManager)getSystemService((Context.CAMERA_SERVICE));
@@ -117,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         manager.openCamera(cameraId,stateCallback,null);
-
     }
 
     private void takePicture() {
