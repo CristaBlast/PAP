@@ -36,6 +36,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Arrays;
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class MainActivity extends AppCompatActivity {
 
     Button btn;
@@ -191,8 +192,33 @@ public class MainActivity extends AppCompatActivity {
         manager.openCamera(cameraId,stateCallback,null);
     }
 
-    private void takePicture() {
+    private void takePicture()
+    {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(textureView.isAvailable())
+        {
+            try {
+                openCamera();
+            }
+            catch (CameraAccessException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            textureView.setSurfaceTextureListener(textureListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     public void clicked(View v)
