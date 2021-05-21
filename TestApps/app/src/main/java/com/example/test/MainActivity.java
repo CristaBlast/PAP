@@ -231,39 +231,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void clicked(View v)
     {
+
+
+
+
+
+
+
+
         //External
-        Toast.makeText(getApplicationContext(),"Btn clicked",Toast.LENGTH_SHORT).show();
-        File file = new File(Environment.getExternalStorageDirectory() + "/177013");
-        if(!file.mkdir())
-        {
-            file.mkdir();
-            Toast.makeText(getApplicationContext(),"Folder Created",Toast.LENGTH_SHORT).show();
-        }
-        String filepath = file.getAbsolutePath();
-        TextView tvt = (TextView) findViewById(R.id.testText);
-        tvt.setText(filepath);
-        String text = "stuff here :3";
-                File textFile = new File(Environment.getExternalStorageDirectory(),FILE_NAME);
-                Toast.makeText(getApplicationContext(), textFile.toString(), Toast.LENGTH_SHORT).show();
-                try {
-                    FileOutputStream fos = new FileOutputStream(textFile);
-                    fos.write(text.getBytes());
-                    fos.close();
-                    Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), "Cannot Shit ;-;", Toast.LENGTH_SHORT).show();
-                }
-//        Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),"Folder Path",Toast.LENGTH_SHORT).show();
-
-
-//        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+//        Toast.makeText(getApplicationContext(),"Btn clicked",Toast.LENGTH_SHORT).show();
+//        File file = new File(Environment.getExternalStorageDirectory() + "/177013");
+//        if(!file.mkdir())
 //        {
-//            Toast.makeText(getApplicationContext(), "Stotare State Positive :3", Toast.LENGTH_SHORT).show();
-//            if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
-//            {
-//                String text = "stuff here :3";
+//            file.mkdir();
+//            Toast.makeText(getApplicationContext(),"Folder Created",Toast.LENGTH_SHORT).show();
+//        }
+//        String filepath = file.getAbsolutePath();
+//        TextView tvt = (TextView) findViewById(R.id.testText);
+//        tvt.setText(filepath);
+//        String text = "stuff here :3";
 //                File textFile = new File(Environment.getExternalStorageDirectory(),FILE_NAME);
 //                Toast.makeText(getApplicationContext(), textFile.toString(), Toast.LENGTH_SHORT).show();
 //                try {
@@ -275,17 +262,62 @@ public class MainActivity extends AppCompatActivity {
 //                    e.printStackTrace();
 //                    Toast.makeText(getApplicationContext(), "Cannot Shit ;-;", Toast.LENGTH_SHORT).show();
 //                }
-//            }
-//            else
-//            {
-//                Toast.makeText(getApplicationContext(), "Fuck doesn't write extertnal storage ....", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        }
-//        else
-//        {
-//            Toast.makeText(getApplicationContext(), "Fuck ;-;", Toast.LENGTH_SHORT).show();
-//        }
+//        Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),"Folder Path",Toast.LENGTH_SHORT).show();
+
+
+
+
+
+
+        //Creates mytext.txt and folder 177013 and another mytext.txt inside the folder
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
+        {
+            Toast.makeText(getApplicationContext(), "Storage State Positive :3", Toast.LENGTH_SHORT).show();
+            if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
+                File file = new File(Environment.getExternalStorageDirectory() + "/177013");
+                if(!file.mkdir())
+                {
+                    file.mkdir();
+                    Toast.makeText(getApplicationContext(),"Folder Created",Toast.LENGTH_SHORT).show();
+                }
+                String text = "stuff here :3";
+                Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_SHORT).show();
+                File textFile = new File(file,FILE_NAME);
+                Toast.makeText(getApplicationContext(), textFile.toString(), Toast.LENGTH_SHORT).show();
+                try {
+                    FileOutputStream fos = new FileOutputStream(textFile);
+                    fos.write(text.getBytes());
+                    fos.close();
+                    Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Cannot Shit ;-;", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Fuck doesn't write external storage ....", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Fuck ;-;", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -310,6 +342,13 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
     }
+
+
+
+
+
+
+
 
     public boolean checkPermission(String permission)
     {
