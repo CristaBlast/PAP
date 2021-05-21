@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clicked(View v)
     {
-        //External Problem :c
+        //External
         Toast.makeText(getApplicationContext(),"Btn clicked",Toast.LENGTH_SHORT).show();
         File file = new File(Environment.getExternalStorageDirectory() + "/177013");
         if(!file.mkdir())
@@ -242,6 +242,19 @@ public class MainActivity extends AppCompatActivity {
         String filepath = file.getAbsolutePath();
         TextView tvt = (TextView) findViewById(R.id.testText);
         tvt.setText(filepath);
+        String text = "stuff here :3";
+                File textFile = new File(Environment.getExternalStorageDirectory(),FILE_NAME);
+                Toast.makeText(getApplicationContext(), textFile.toString(), Toast.LENGTH_SHORT).show();
+                try {
+                    FileOutputStream fos = new FileOutputStream(textFile);
+                    fos.write(text.getBytes());
+                    fos.close();
+                    Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), "Cannot Shit ;-;", Toast.LENGTH_SHORT).show();
+                }
+//        Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
         Toast.makeText(getApplicationContext(),"Folder Path",Toast.LENGTH_SHORT).show();
 
 
@@ -260,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 //                    Toast.makeText(getApplicationContext(), "File Saved", Toast.LENGTH_SHORT).show();
 //                } catch (IOException e) {
 //                    e.printStackTrace();
-//                    Toast.makeText(getApplicationContext(), "CAnnot Shit ;-;", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "Cannot Shit ;-;", Toast.LENGTH_SHORT).show();
 //                }
 //            }
 //            else

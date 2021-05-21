@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         if(camera!=null)
         {
             camera.takePicture(null,null,mPictureCallback);
-//            Toast.makeText(getApplicationContext(),"Stuff",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Shutter clicked",Toast.LENGTH_SHORT).show();
         }
         camera.stopPreview();
         camera.startPreview();
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     FileOutputStream fos = new FileOutputStream(picture_file);
                     fos.write(data);
                     fos.close();
-
+                    Toast.makeText(getApplicationContext(), "Photo saved II", Toast.LENGTH_SHORT).show();
                     camera.startPreview();
                 }
                 catch (IOException e)
@@ -128,8 +128,57 @@ public class MainActivity extends AppCompatActivity {
 
     private File getOutputMediaFile()
     {
-
+        String state = Environment.getExternalStorageState();
+        if(!state.equals(Environment.MEDIA_MOUNTED))
+        {
+            return null;
+        }
+        else
+        {
+            File pathFolder = new File(Environment.getExternalStorageDirectory() + "/Scan-It");
+            if(!pathFolder.exists())
+            {
+                pathFolder.mkdir();
+                Toast.makeText(getApplicationContext(), "Folder Created ", Toast.LENGTH_SHORT).show();
+            }
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            File outputFile = new File(pathFolder,"IMG_" + timeStamp);
+            Toast.makeText(getApplicationContext(), "Photo Created I", Toast.LENGTH_SHORT).show();
+            return outputFile;
+        }
     }
+
+
+
+
+
+
+
+
+//    private File getOutputMediaFile()
+//    {
+//        String state = Environment.getExternalStorageState();
+//        if(!state.equals(Environment.MEDIA_MOUNTED))
+//        {
+//            return null;
+//        }
+//        else
+//        {
+//            File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "GUI");
+//            if(!folder_gui.exists())
+//            {
+//                folder_gui.mkdir();
+//            }
+//            File outputFile = new File(folder_gui,"temp.jpg");
+//            return outputFile;
+//        }
+//    }
+
+
+
+
+
+
 //    public static final int MEDIA_TYPE_IMAGE = 1;
 
     /** Create a File for saving an image or video **/
@@ -175,6 +224,16 @@ public class MainActivity extends AppCompatActivity {
 //        this.sendBroadcast(mediaScanIntent);
 //    }
     //End Camera
+
+
+
+
+
+
+
+
+
+
 
     public void goTWelcomePage(View v)
     {
