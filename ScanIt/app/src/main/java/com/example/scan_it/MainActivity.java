@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnF = findViewById(R.id.btnFinish);
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
-            Toast.makeText(getApplicationContext(), "Has Storage Exists", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
             if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             {
                 File file = new File(Environment.getExternalStorageDirectory() + "/Scan-It");
@@ -149,12 +149,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             File picture_file = getOutputMediaFile();
+            Toast.makeText(getApplicationContext(), picture_file.toString(), Toast.LENGTH_SHORT).show();
             if(picture_file == null)
             {
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
                 return;
             }
-            else
-            {
                 try
                 {
                     FileOutputStream fos = new FileOutputStream(picture_file);
@@ -169,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
                 {
                     e.printStackTrace();
                 }
-            }
         }
     };
 
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
             }
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             File outputFile = new File(pathFolder,"IMG_" + timeStamp);
-            Toast.makeText(getApplicationContext(), "Photo Created", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Photo Created " + outputFile.toString(), Toast.LENGTH_SHORT).show();
             return outputFile;
 //        }
     }
@@ -200,90 +199,6 @@ public class MainActivity extends AppCompatActivity {
         int check = ContextCompat.checkSelfPermission(this,permission);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
-
-
-
-
-
-
-//    private File getOutputMediaFile()
-//    {
-//        String state = Environment.getExternalStorageState();
-//        if(!state.equals(Environment.MEDIA_MOUNTED))
-//        {
-//            return null;
-//        }
-//        else
-//        {
-//            File folder_gui = new File(Environment.getExternalStorageDirectory() + File.separator + "GUI");
-//            if(!folder_gui.exists())
-//            {
-//                folder_gui.mkdir();
-//            }
-//            File outputFile = new File(folder_gui,"temp.jpg");
-//            return outputFile;
-//        }
-//    }
-
-
-
-
-
-
-//    public static final int MEDIA_TYPE_IMAGE = 1;
-
-    /** Create a File for saving an image or video **/
-//    public static File getOutputMediaFile(int type)
-//    {
-        // To be safe, you should check that the SDCard is mounted
-        // using Environment.getExternalStorageState() before doing this.
-
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "ScanIt");
-
-        // This location works best if you want the created images to be shared
-        // between applications and persist after your app has been uninstalled.
-        // Create the storage directory if it does not exist
-
-//        if (! mediaStorageDir.exists()){
-//            if (! mediaStorageDir.mkdirs()){
-//                Log.d("ScanIt", "failed to create directory");
-//                return null;
-//            }
-//        }
-
-        // Create a media file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        File mediaFile;
-//        if (type == MEDIA_TYPE_IMAGE){
-//            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
-//
-//
-//
-//        }
-//        else {
-//            return null;
-//        }
-//
-//        return mediaFile;
-//    }
-//
-//    public void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(currentPhotoPath);
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        this.sendBroadcast(mediaScanIntent);
-//    }
-    //End Camera
-
-
-
-
-
-
-
-
-
 
 
     public void goTWelcomePage(View v)
