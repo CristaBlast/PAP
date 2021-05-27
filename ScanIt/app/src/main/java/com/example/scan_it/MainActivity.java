@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Camera camera;
     FrameLayout frameLayout;
     ShowCamera showCamera;
-    String currentPhotoPath;
+    //String photosPath;
     Bitmap sbmp;
     String testText;
 
@@ -45,11 +45,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        frameLayout = (FrameLayout)findViewById(R.id.cameraPreview);
-        camera = Camera.open();
-        showCamera = new ShowCamera(this,camera);
-        frameLayout.addView(showCamera);
+        setContentView(R.layout.welcome_page);
+
         //Important bmp = BitmapFactory.decodeResource(getResources(),)//path)
     }
 
@@ -94,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         {
             camera.takePicture(null,null,mPictureCallback);
             Toast.makeText(getApplicationContext(),"Shutter clicked",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getOutputMediaFile().toString(), Toast.LENGTH_SHORT).show();
         }
         camera.stopPreview();
         camera.startPreview();
@@ -119,9 +117,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), picture_file.toString(), Toast.LENGTH_SHORT).show();
             if(picture_file == null)
             {
-                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error Path Not Found", Toast.LENGTH_SHORT).show();
                 return;
             }
+            else
+            {
                 try
                 {
                     FileOutputStream fos = new FileOutputStream(picture_file);
@@ -135,7 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException e)
                 {
                     e.printStackTrace();
+                    Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            //doesn't work ;-;
+
+
         }
     };
 
@@ -155,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 File output = new File(pathFolder,"IMG_" + timeStamp);
-                Toast.makeText(getApplicationContext(), "Photo Created " + output.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Photo Name Created " + output.toString(), Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
             else
@@ -175,8 +181,7 @@ public class MainActivity extends AppCompatActivity {
         int check = ContextCompat.checkSelfPermission(this,permission);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
-
-
+    
     public void goTWelcomePage(View v)
     {
         setContentView(R.layout.welcome_page);
@@ -185,6 +190,10 @@ public class MainActivity extends AppCompatActivity {
     public void goTMainPage(View v)
     {
         setContentView(R.layout.activity_main);
+        frameLayout = (FrameLayout)findViewById(R.id.cameraPreview);
+        camera = Camera.open();
+        showCamera = new ShowCamera(this,camera);
+        frameLayout.addView(showCamera);
     }
 
     public void goTSavePage(View v)
