@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,12 +29,12 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MainActivity extends AppCompatActivity {
-
     Camera camera;
     FrameLayout frameLayout;
     ShowCamera showCamera;
@@ -41,13 +42,13 @@ public class MainActivity extends AppCompatActivity {
     Bitmap sbmp;
     String testText;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_page);
 
         //Important bmp = BitmapFactory.decodeResource(getResources(),)//path)
+
     }
 
     //PDF
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Camera
+
     public void capturePhoto(View v)
     {
         Button btnF = findViewById(R.id.btnFinish);
@@ -95,17 +97,6 @@ public class MainActivity extends AppCompatActivity {
         }
         camera.stopPreview();
         camera.startPreview();
-
-
-//        if(camera!=null)
-//        {
-//            camera.takePicture(null,null,mPictureCallback);
-//            Toast.makeText(getApplicationContext(),"Shutter clicked",Toast.LENGTH_SHORT).show();
-//        }
-//        camera.stopPreview();
-//        camera.startPreview();
-
-
         btnF.setVisibility(View.VISIBLE);
     }
 
@@ -115,34 +106,45 @@ public class MainActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera) {
             File picture_file = getOutputMediaFile();
             Toast.makeText(getApplicationContext(), picture_file.toString(), Toast.LENGTH_SHORT).show();
-            if(picture_file == null)
-            {
-                Toast.makeText(getApplicationContext(), "Error Path Not Found", Toast.LENGTH_SHORT).show();
-                return;
+            if(picture_file != null) {
+                try {
+//                try
+//                {
+                    //Problem Here ;-;
+                    //Toast.makeText(getApplicationContext(), "Photo saved II", Toast.LENGTH_SHORT).show();
+//                    FileOutputStream fos = new FileOutputStream(picture_file);
+//                    fos.write(data);
+//                    fos.close();
+
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    Uri photoURI = Uri.fromFile(picture_file);
+                    Toast.makeText(getApplicationContext(), "Fuck Yes", Toast.LENGTH_SHORT).show();
+                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(cameraIntent, 1);
+                    camera.startPreview();
+                }
+                catch (Exception e)
+                {
+                    return;
+                }
             }
             else
             {
-                try
-                {
-                    FileOutputStream fos = new FileOutputStream(picture_file);
-                    fos.write(data);
-                    fos.close();
-
-                    Toast.makeText(getApplicationContext(), "Photo saved II", Toast.LENGTH_SHORT).show();
-
-                    camera.startPreview();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
             }
-
+//                catch (IOException e)
+//                {
+    //                    e.printStackTrace();
+    //                    Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
+               // }
+            }
+//            else
+//            {
+//                Toast.makeText(getApplicationContext(), "Error Path Not Found", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
             //doesn't work ;-;
-
-
-        }
+        //}
     };
 
     public File getOutputMediaFile()
@@ -160,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Root Folder Created",Toast.LENGTH_SHORT).show();
                 }
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                File output = new File(pathFolder,"IMG_" + timeStamp);
+                File output = new File(pathFolder,"IMG_" + timeStamp + ".jpg");
                 Toast.makeText(getApplicationContext(), "Photo Name Created " + output.toString(), Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         int check = ContextCompat.checkSelfPermission(this,permission);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
-    
+
     public void goTWelcomePage(View v)
     {
         setContentView(R.layout.welcome_page);
