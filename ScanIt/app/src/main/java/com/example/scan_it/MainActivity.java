@@ -27,7 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
@@ -88,63 +90,41 @@ public class MainActivity extends AppCompatActivity {
     public void capturePhoto(View v)
     {
         Button btnF = findViewById(R.id.btnFinish);
-
         if(camera!=null)
         {
             camera.takePicture(null,null,mPictureCallback);
             Toast.makeText(getApplicationContext(),"Shutter clicked",Toast.LENGTH_SHORT).show();
             Toast.makeText(getApplicationContext(), getOutputMediaFile().toString(), Toast.LENGTH_SHORT).show();
-        }
-        camera.stopPreview();
-        camera.startPreview();
+        }   
         btnF.setVisibility(View.VISIBLE);
     }
 
     Camera.PictureCallback mPictureCallback = new Camera.PictureCallback()
     {
         @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
+        public void onPictureTaken(byte[] data, Camera camera)
+        {
             File picture_file = getOutputMediaFile();
             Toast.makeText(getApplicationContext(), picture_file.toString(), Toast.LENGTH_SHORT).show();
-            if(picture_file != null) {
-                try {
-//                try
-//                {
-                    //Problem Here ;-;
-                    //Toast.makeText(getApplicationContext(), "Photo saved II", Toast.LENGTH_SHORT).show();
-//                    FileOutputStream fos = new FileOutputStream(picture_file);
-//                    fos.write(data);
-//                    fos.close();
-
-                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    Uri photoURI = Uri.fromFile(picture_file);
-                    Toast.makeText(getApplicationContext(), "Fuck Yes", Toast.LENGTH_SHORT).show();
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    startActivityForResult(cameraIntent, 1);
+            if(picture_file != null)
+            {
+                try
+                {
+                    FileOutputStream fos = new FileOutputStream(picture_file);
+                    fos.write(data);
+                    fos.close();
                     camera.startPreview();
                 }
-                catch (Exception e)
+                catch (IOException e)
                 {
-                    return;
+                    e.printStackTrace();
                 }
             }
             else
             {
-                Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
+                return;
             }
-//                catch (IOException e)
-//                {
-    //                    e.printStackTrace();
-    //                    Toast.makeText(getApplicationContext(),"Fatal error IOException",Toast.LENGTH_SHORT).show();
-               // }
-            }
-//            else
-//            {
-//                Toast.makeText(getApplicationContext(), "Error Path Not Found", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-            //doesn't work ;-;
-        //}
+        }
     };
 
     public File getOutputMediaFile()
@@ -159,7 +139,6 @@ public class MainActivity extends AppCompatActivity {
                 if(!pathFolder.mkdir())
                 {
                     pathFolder.mkdir();
-                    Toast.makeText(getApplicationContext(),"Root Folder Created",Toast.LENGTH_SHORT).show();
                 }
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 File output = new File(pathFolder,"IMG_" + timeStamp + ".jpg");
@@ -169,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             else
             {
                 Toast.makeText(getApplicationContext(), "Can't write on external storage", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Please permit storage in the definitions", Toast.LENGTH_SHORT).show();
             }
         }
         else
