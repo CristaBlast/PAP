@@ -40,9 +40,8 @@ public class MainActivity extends AppCompatActivity {
     Camera camera;
     FrameLayout frameLayout;
     ShowCamera showCamera;
-    //String photosPath;
+    String photosToAddPDF = "";
     Bitmap sbmp;
-    String testText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         pdfName = pdfN.getText().toString();
         PdfDocument pdf = new PdfDocument();
         Paint paint = new Paint();
-
+        int numPhotos;
+        for()
 
 
 
@@ -93,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
         if(camera!=null)
         {
             camera.takePicture(null,null,mPictureCallback);
-            Toast.makeText(getApplicationContext(),"Shutter clicked",Toast.LENGTH_SHORT).show();
-            Toast.makeText(getApplicationContext(), getOutputMediaFile().toString(), Toast.LENGTH_SHORT).show();
         }   
         btnF.setVisibility(View.VISIBLE);
     }
@@ -105,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
         public void onPictureTaken(byte[] data, Camera camera)
         {
             File picture_file = getOutputMediaFile();
-            Toast.makeText(getApplicationContext(), picture_file.toString(), Toast.LENGTH_SHORT).show();
             if(picture_file != null)
             {
                 try
@@ -130,6 +127,8 @@ public class MainActivity extends AppCompatActivity {
     public File getOutputMediaFile()
     {
         File outputFile = null;
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String folderNameDate = new SimpleDateFormat ("dd_MM_yyyy").format(new Date());
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
             Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
@@ -140,9 +139,22 @@ public class MainActivity extends AppCompatActivity {
                 {
                     pathFolder.mkdir();
                 }
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                File output = new File(pathFolder,"IMG_" + timeStamp + ".jpg");
-                Toast.makeText(getApplicationContext(), "Photo Name Created " + output.toString(), Toast.LENGTH_SHORT).show();
+                File photosFolder = new File(pathFolder + "/" + folderNameDate);
+                if (!photosFolder.mkdir())
+                {
+                    photosFolder.mkdir();
+                }
+                String photoName = "IMG_" + timeStamp + ".jpg";
+                File output = new File(photosFolder,photoName);
+                if(photosToAddPDF == "")
+                {
+                    photosToAddPDF = photoName;
+                }
+                else
+                {
+                    photosToAddPDF = photosToAddPDF + "/" + photoName;
+                }
+                Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
             else
@@ -182,6 +194,5 @@ public class MainActivity extends AppCompatActivity {
     {
         setContentView(R.layout.save_page);
         TextView tvt = (TextView)findViewById(R.id.textTestPage);
-        tvt.setText(testText);
     }
 }
