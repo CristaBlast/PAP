@@ -2,6 +2,7 @@ package com.example.scan_it;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -41,44 +42,34 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout frameLayout;
     ShowCamera showCamera;
     String photosToAddPDF = "";
+    int numPhotos = 0;
     Bitmap sbmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_page);
-
-        //Important bmp = BitmapFactory.decodeResource(getResources(),)//path)
-
     }
 
     //PDF
     public void pfd(View v)
     {
-        String pdfName;
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
-        pdfName = pdfN.getText().toString();
+        String pdfName = pdfN.getText().toString();
         PdfDocument pdf = new PdfDocument();
         Paint paint = new Paint();
-        int numPhotos;
-        for()
 
 
-
-        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(400,600,1).create();
-        PdfDocument.Page page = pdf.startPage(pageInfo);
-        Canvas canvas = page.getCanvas();
-        canvas.drawBitmap(sbmp,400,600,paint);
-
-
-
-
-        File file = new File(Environment.getExternalStorageDirectory(),"/" + pdfName + ".pdf");
-
-
-
-        
-        pdf.finishPage(page);
+        for (int a = 1; a <= numPhotos; a++)
+        {
+//            String photo =
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(400,600,a).create();
+            PdfDocument.Page page = pdf.startPage(pageInfo);
+            Canvas canvas = page.getCanvas();
+            canvas.drawBitmap(sbmp,400,600,paint);
+        }
+        File file = new File(Environment.getExternalStorageDirectory(),"/Scan-It/PDF_Scans/" + pdfName + ".pdf");
+//        pdf.finishPage(page);
         pdf.close();
      }
 
@@ -154,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
                 {
                     photosToAddPDF = photosToAddPDF + "/" + photoName;
                 }
+                numPhotos++;
                 Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), String.valueOf(numPhotos), Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
             else
