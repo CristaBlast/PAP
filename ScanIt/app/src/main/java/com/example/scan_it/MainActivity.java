@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     ShowCamera showCamera;
     String photosToAddPDF = "";
     int numPhotos = 0;
-    Bitmap sbmp;
+    String pF;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +54,41 @@ public class MainActivity extends AppCompatActivity {
     //PDF
     public void pfd(View v)
     {
+        int lenghPAP = photosToAddPDF.length();
+        int startLPAP = 0;
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
         String pdfName = pdfN.getText().toString();
         PdfDocument pdf = new PdfDocument();
-        Paint paint = new Paint();
-
-
-        for (int a = 1; a <= numPhotos; a++)
+        for (int a = 1 ; a <= numPhotos ; a++)
         {
-//            String photo =
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(400,600,a).create();
-            PdfDocument.Page page = pdf.startPage(pageInfo);
-            Canvas canvas = page.getCanvas();
-            canvas.drawBitmap(sbmp,400,600,paint);
+            for(int b = startLPAP ; b <= lenghPAP ; b++)
+            {
+                Toast.makeText(getApplicationContext(), String.valueOf(b), Toast.LENGTH_SHORT).show();
+                String photo = pF + b;
+                Bitmap bitmap = BitmapFactory.decodeFile(photo);
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5120,3840,a).create(); //Test dimensions :3
+                PdfDocument.Page page = pdf.startPage(pageInfo);
+                page.getCanvas().drawBitmap(bitmap,0,0,null);
+                pdf.finishPage(page);
+            }
+            if(a == 1)
+            {
+                startLPAP = photosToAddPDF.indexOf("/");
+            }
+            else
+            {
+                startLPAP = photosToAddPDF.indexOf("/", photosToAddPDF.indexOf("/") + a);
+            }
         }
-        File file = new File(Environment.getExternalStorageDirectory(),"/Scan-It/PDF_Scans/" + pdfName + ".pdf");
-//        pdf.finishPage(page);
+//        File file = new File(pF + "/PDF_Scans/" + pdfName + ".pdf");
+        String file = pF + "/PDF_Scans/hithere.pdf";
+        File PDFFile = new File(file);
+        Toast.makeText(getApplicationContext(), "Donne PDF", Toast.LENGTH_SHORT).show();
+        try {
+            pdf.writeTo(new FileOutputStream(PDFFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pdf.close();
      }
 
@@ -135,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     photosFolder.mkdir();
                 }
+                pF = photosFolder.toString();
                 String photoName = "IMG_" + timeStamp + ".jpg";
                 File output = new File(photosFolder,photoName);
                 if(photosToAddPDF == "")
@@ -146,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                     photosToAddPDF = photosToAddPDF + "/" + photoName;
                 }
                 numPhotos++;
+                int locate_ = photosToAddPDF.indexOf("/");
                 Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
                 Toast.makeText(getApplicationContext(), String.valueOf(numPhotos), Toast.LENGTH_SHORT).show();
                 outputFile = output;
