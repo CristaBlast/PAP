@@ -65,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
             {
                 Toast.makeText(getApplicationContext(), String.valueOf(b), Toast.LENGTH_SHORT).show();
                 String photo = pF + b;
-                Bitmap bitmap = BitmapFactory.decodeFile(photo);
+//                Bitmap bitmap = BitmapFactory.decodeFile(photo);
+                Bitmap bitmap = BitmapFactory.decodeFile((getOutputMediaFile()).toString());
                 PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5120,3840,a).create(); //Test dimensions :3
                 PdfDocument.Page page = pdf.startPage(pageInfo);
                 page.getCanvas().drawBitmap(bitmap,0,0,null);
