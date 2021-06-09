@@ -30,7 +30,7 @@
         android:layout_marginLeft="250dp"
         android:layout_marginTop="680dp"
         android:fontFamily="@font/merriweather"
-        android:onClick="goTSavePage"
+        android:onClick="pdf"
         android:text="Finish"
         android:textColor="#000000"
         android:visibility="invisible"

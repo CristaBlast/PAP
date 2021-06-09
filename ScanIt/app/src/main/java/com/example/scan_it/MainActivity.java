@@ -1,40 +1,29 @@
 package com.example.scan_it;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class MainActivity extends AppCompatActivity {
@@ -49,46 +38,70 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.welcome_page);
+
+//        ActivityCompat.requestPermissions(this, new String[]{MANAGE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
+//        ActivityCompat.requestPermissions(this, new String[]{CAMERA}, PackageManager.PERMISSION_GRANTED);
+
     }
 
     //PDF
-    public void pfd(View v)
+    public void pdf(View view)
     {
-        int lenghPAP = photosToAddPDF.length();
-        int startLPAP = 0;
-        EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
-        String pdfName = pdfN.getText().toString();
-        PdfDocument pdf = new PdfDocument();
-        for (int a = 1 ; a <= numPhotos ; a++)
-        {
-            for(int b = startLPAP ; b <= lenghPAP ; b++)
-            {
-                Toast.makeText(getApplicationContext(), String.valueOf(b), Toast.LENGTH_SHORT).show();
-                String photo = pF + b;
+        //int lengthPAP = photosToAddPDF.length(); //Size of the string with all the photo ID's
+        //int startLPAP = 0; //Initializing variable
+        //EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
+        //String pdfName = pdfN.getText().toString();
+
+
+
+//        for (int a = 1 ; a <= numPhotos+1 ; a++)
+//        {
+//            for(int b = startLPAP ; b <= lengthPAP ; b++)
+//            {
+//                Toast.makeText(getApplicationContext(), String.valueOf(b), Toast.LENGTH_SHORT).show();
+//                String photo = pF + b;
 //                Bitmap bitmap = BitmapFactory.decodeFile(photo);
-                Bitmap bitmap = BitmapFactory.decodeFile((getOutputMediaFile()).toString());
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5120,3840,a).create(); //Test dimensions :3
+
+                String fileN = getOutputMediaFile().toString();
+//                Bitmap bitmap = Bitmap.createBitmap(fileN);
+                Bitmap bitmap =  BitmapFactory.decodeFile(fileN);
+
+                PdfDocument pdf = new PdfDocument();
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(),bitmap.getHeight(),1).create();
                 PdfDocument.Page page = pdf.startPage(pageInfo);
+
                 page.getCanvas().drawBitmap(bitmap,0,0,null);
                 pdf.finishPage(page);
-            }
-            if(a == 1)
-            {
-                startLPAP = photosToAddPDF.indexOf("/");
-            }
-            else
-            {
-                startLPAP = photosToAddPDF.indexOf("/", photosToAddPDF.indexOf("/") + a);
-            }
-        }
+
+                String pdFile = Environment.getExternalStorageDirectory() + "/Scan-It/PDF_Scans/pdfA.pdf";
+                File PDFFile = new File(pdFile);
+
+//            }
+//            if(a == 1)
+//            {
+//                startLPAP = photosToAddPDF.indexOf("/");
+//            }
+//            else
+//            {
+//                startLPAP = photosToAddPDF.indexOf("/", photosToAddPDF.indexOf("/") + a);
+//            }
+//        }
 //        File file = new File(pF + "/PDF_Scans/" + pdfName + ".pdf");
-        String file = pF + "/PDF_Scans/hithere.pdf";
-        File PDFFile = new File(file);
+//        String file = pF + "/PDF_Scans/hithere.pdf";
+//        File PDFFile = new File(file);
+
         Toast.makeText(getApplicationContext(), "Donne PDF", Toast.LENGTH_SHORT).show();
-        try {
+
+        try
+        {
             pdf.writeTo(new FileOutputStream(PDFFile));
-        } catch (IOException e) {
+        }
+
+        catch (IOException e)
+        {
             e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "Error ;-;", Toast.LENGTH_SHORT).show();
         }
         pdf.close();
      }
@@ -142,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         String folderNameDate = new SimpleDateFormat ("dd_MM_yyyy").format(new Date());
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
-            Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
             if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             {
                 File pathFolder = new File(Environment.getExternalStorageDirectory() + "/Scan-It");
@@ -167,9 +180,10 @@ public class MainActivity extends AppCompatActivity {
                     photosToAddPDF = photosToAddPDF + "/" + photoName;
                 }
                 numPhotos++;
-                int locate_ = photosToAddPDF.indexOf("/");
-                Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), String.valueOf(numPhotos), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), output.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), (Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)).toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), String.valueOf(numPhotos), Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
             else
@@ -182,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         {
             Toast.makeText(getApplicationContext(), "Doesn't have external storage", Toast.LENGTH_SHORT).show();
         }
+        Toast.makeText(getApplicationContext(), outputFile.toString(), Toast.LENGTH_SHORT).show();
         return outputFile;
     }
 
@@ -207,7 +222,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void goTSavePage(View v)
     {
-        setContentView(R.layout.save_page);
-        TextView tvt = (TextView)findViewById(R.id.textTestPage);
+//        setContentView(R.layout.save_page);
+//        TextView tvt = (TextView)findViewById(R.id.textTestPage);
+//        Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
     }
 }
