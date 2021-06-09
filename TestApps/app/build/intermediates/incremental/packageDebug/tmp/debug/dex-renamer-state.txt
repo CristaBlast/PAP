@@ -1,4 +1,0 @@
-#Fri May 21 12:21:12 BST 2021
-base.0=C\:\\Users\\MAC\\Desktop\\Cristiano\\PAP\\TestApps\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex

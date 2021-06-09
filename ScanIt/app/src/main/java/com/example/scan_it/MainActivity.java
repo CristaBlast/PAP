@@ -64,11 +64,17 @@ public class MainActivity extends AppCompatActivity {
 
                 String fileN = getOutputMediaFile().toString();
 //                Bitmap bitmap = Bitmap.createBitmap(fileN);
-                Bitmap bitmap =  BitmapFactory.decodeFile(fileN);
+                BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+                Bitmap bitmap =  BitmapFactory.decodeFile(fileN,bmOptions);
 
                 PdfDocument pdf = new PdfDocument();
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(),bitmap.getHeight(),1).create();
+//                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(),bitmap.getHeight(),1).create();
+
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5180,3140,1).create();
                 PdfDocument.Page page = pdf.startPage(pageInfo);
+
+                Toast.makeText(getApplicationContext(), bitmap.toString(), Toast.LENGTH_SHORT).show();
+                bitmap = Bitmap.createScaledBitmap(bitmap,bitmap.getWidth(),bitmap.getHeight(),true);
 
                 page.getCanvas().drawBitmap(bitmap,0,0,null);
                 pdf.finishPage(page);
