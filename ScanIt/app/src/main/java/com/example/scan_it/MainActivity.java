@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout frameLayout;
     ShowCamera showCamera;
     int numPhotos = 1;
+    String rootPath = Environment.getExternalStorageDirectory() + "/Scan-It";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,37 +51,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //PDF
-    public void pfd(View v)
+    public void pdf(View v)
     {
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
         String pdfName = pdfN.getText().toString();
         Bitmap bitmap;
         PdfDocument pdf = new PdfDocument();
+        File pdfFolder = new File(rootPath + "/ScansPDF");
+        if (!pdfFolder.mkdir())
+        {
+            pdfFolder.mkdir();
+        }
         for (int a = 1 ; a <= numPhotos ; a++)
         {
-                String photo = Environment.getExternalStorageDirectory() + "/Scan-It/ScansTemp/" + a + ".jpg";
-                bitmap = BitmapFactory.decodeFile(photo);
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5120,3840,a).create(); //Test dimensions :3
-                PdfDocument.Page page = pdf.startPage(pageInfo);
-                Canvas canvas = page.getCanvas();
-                canvas.drawBitmap(bitmap,0,0,null);
-                pdf.finishPage(page);
+            String photo = rootPath + "/ScansTemp/" + a + ".jpg";
+            bitmap = BitmapFactory.decodeFile(photo);
+            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(), bitmap.getHeight(), a).create();
+            PdfDocument.Page page = pdf.startPage(pageInfo);
+            Canvas canvas = page.getCanvas();
+            canvas.drawBitmap(bitmap, 0, 0, null);
+            pdf.finishPage(page);
         }
-        File PDFFile = new File(Environment.getExternalStorageDirectory() + "/Scan-It/" + pdfName + ".pdf");
+        File PDFFile = new File(pdfFolder + "/" + pdfName + ".pdf");
         Toast.makeText(getApplicationContext(), "Donne PDF", Toast.LENGTH_SHORT).show();
-        try {
+        try
+        {
             pdf.writeTo(new FileOutputStream(PDFFile));
-        } catch (IOException e) {
+        }
+        catch (IOException e)
+        {
             e.printStackTrace();
         }
         pdf.close();
      }
-
      //End PDF
 
 
     //Camera
-
     public void capturePhoto(View v)
     {
         Button btnF = findViewById(R.id.btnFinish);
@@ -126,12 +133,12 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
             if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             {
-                File pathFolder = new File(Environment.getExternalStorageDirectory() + "/Scan-It");
+                File pathFolder = new File(rootPath);
                 if(!pathFolder.mkdir())
                 {
                     pathFolder.mkdir();
                 }
-                File photosFolder = new File(pathFolder + "/ScansTemp");
+                File photosFolder = new File(rootPath + "/ScansTemp");
                 if (!photosFolder.mkdir())
                 {
                     photosFolder.mkdir();
