@@ -24,7 +24,6 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback
         this.camera = camera;
         holder = getHolder();
         holder.addCallback(this);
-
     }
 
     @Override
@@ -58,7 +57,6 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback
         {
             e.printStackTrace();
         }
-
     }
 
     @Override

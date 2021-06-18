@@ -41,9 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Camera camera;
     FrameLayout frameLayout;
     ShowCamera showCamera;
-    String photosToAddPDF = "";
-    int numPhotos = 0;
-    String pF;
+    int numPhotos = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,36 +52,21 @@ public class MainActivity extends AppCompatActivity {
     //PDF
     public void pfd(View v)
     {
-        int lenghPAP = photosToAddPDF.length();
-        int startLPAP = 0;
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
         String pdfName = pdfN.getText().toString();
+        Bitmap bitmap;
         PdfDocument pdf = new PdfDocument();
         for (int a = 1 ; a <= numPhotos ; a++)
         {
-            for(int b = startLPAP ; b <= lenghPAP ; b++)
-            {
-                Toast.makeText(getApplicationContext(), String.valueOf(b), Toast.LENGTH_SHORT).show();
-                String photo = pF + b;
-//                Bitmap bitmap = BitmapFactory.decodeFile(photo);
-                Bitmap bitmap = BitmapFactory.decodeFile((getOutputMediaFile()).toString());
+                String photo = Environment.getExternalStorageDirectory() + "/Scan-It/ScansTemp/" + a + ".jpg";
+                bitmap = BitmapFactory.decodeFile(photo);
                 PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(5120,3840,a).create(); //Test dimensions :3
                 PdfDocument.Page page = pdf.startPage(pageInfo);
-                page.getCanvas().drawBitmap(bitmap,0,0,null);
+                Canvas canvas = page.getCanvas();
+                canvas.drawBitmap(bitmap,0,0,null);
                 pdf.finishPage(page);
-            }
-            if(a == 1)
-            {
-                startLPAP = photosToAddPDF.indexOf("/");
-            }
-            else
-            {
-                startLPAP = photosToAddPDF.indexOf("/", photosToAddPDF.indexOf("/") + a);
-            }
         }
-//        File file = new File(pF + "/PDF_Scans/" + pdfName + ".pdf");
-        String file = pF + "/PDF_Scans/hithere.pdf";
-        File PDFFile = new File(file);
+        File PDFFile = new File(Environment.getExternalStorageDirectory() + "/Scan-It/" + pdfName + ".pdf");
         Toast.makeText(getApplicationContext(), "Donne PDF", Toast.LENGTH_SHORT).show();
         try {
             pdf.writeTo(new FileOutputStream(PDFFile));
@@ -138,8 +121,6 @@ public class MainActivity extends AppCompatActivity {
     public File getOutputMediaFile()
     {
         File outputFile = null;
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String folderNameDate = new SimpleDateFormat ("dd_MM_yyyy").format(new Date());
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
             Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
@@ -150,26 +131,14 @@ public class MainActivity extends AppCompatActivity {
                 {
                     pathFolder.mkdir();
                 }
-                File photosFolder = new File(pathFolder + "/" + folderNameDate);
+                File photosFolder = new File(pathFolder + "/ScansTemp");
                 if (!photosFolder.mkdir())
                 {
                     photosFolder.mkdir();
                 }
-                pF = photosFolder.toString();
-                String photoName = "IMG_" + timeStamp + ".jpg";
+                String photoName = String.valueOf(numPhotos) + ".jpg";
                 File output = new File(photosFolder,photoName);
-                if(photosToAddPDF == "")
-                {
-                    photosToAddPDF = photoName;
-                }
-                else
-                {
-                    photosToAddPDF = photosToAddPDF + "/" + photoName;
-                }
                 numPhotos++;
-                int locate_ = photosToAddPDF.indexOf("/");
-                Toast.makeText(getApplicationContext(), photosToAddPDF, Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(), String.valueOf(numPhotos), Toast.LENGTH_SHORT).show();
                 outputFile = output;
             }
             else
