@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     Camera camera;
     FrameLayout frameLayout;
     ShowCamera showCamera;
-    int numPhotos = 1;
+    int numPhotos = 0;
     String rootPath = Environment.getExternalStorageDirectory() + "/Scan-It";
 
     @Override
@@ -62,18 +62,17 @@ public class MainActivity extends AppCompatActivity {
         {
             pdfFolder.mkdir();
         }
-        for (int a = 1 ; a <= numPhotos ; a++)
-        {
-            String photo = rootPath + "/ScansTemp/" + a + ".jpg";
-            bitmap = BitmapFactory.decodeFile(photo);
-            PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(), bitmap.getHeight(), a).create();
-            PdfDocument.Page page = pdf.startPage(pageInfo);
-            Canvas canvas = page.getCanvas();
-            canvas.drawBitmap(bitmap, 0, 0, null);
-            pdf.finishPage(page);
-        }
+            for (int a = 1 ; a <= numPhotos ; a++)
+            {
+                String photo = rootPath + "/ScansTemp/" + a + ".jpg";
+                bitmap = BitmapFactory.decodeFile(photo);
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(), bitmap.getHeight(), a).create();
+                PdfDocument.Page page = pdf.startPage(pageInfo);
+                Canvas canvas = page.getCanvas();
+                canvas.drawBitmap(bitmap, 0, 0, null);
+                pdf.finishPage(page);
+            }
         File PDFFile = new File(pdfFolder + "/" + pdfName + ".pdf");
-        Toast.makeText(getApplicationContext(), "Donne PDF", Toast.LENGTH_SHORT).show();
         try
         {
             pdf.writeTo(new FileOutputStream(PDFFile));
@@ -83,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         pdf.close();
+//        setContentView(R.layout.welcome_page);
      }
      //End PDF
 
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
         File outputFile = null;
         if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))
         {
-            Toast.makeText(getApplicationContext(), "Has External Storage", Toast.LENGTH_SHORT).show();
             if (checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE))
             {
                 File pathFolder = new File(rootPath);
@@ -184,6 +183,6 @@ public class MainActivity extends AppCompatActivity {
     public void goTSavePage(View v)
     {
         setContentView(R.layout.save_page);
-        TextView tvt = (TextView)findViewById(R.id.textTestPage);
+//        setContentView(R.layout.waiting_page);
     }
 }
