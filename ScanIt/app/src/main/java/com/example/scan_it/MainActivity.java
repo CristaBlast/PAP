@@ -17,8 +17,10 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -82,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         pdf.close();
-//        setContentView(R.layout.welcome_page);
+        setContentView(R.layout.end_page);
      }
      //End PDF
 
@@ -159,6 +162,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return outputFile;
     }
+    //End Camera
 
     public boolean checkPermission(String permission)
     {
@@ -182,7 +186,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void goTSavePage(View v)
     {
-        setContentView(R.layout.save_page);
-//        setContentView(R.layout.waiting_page);
+        setContentView(R.layout.waiting_page);
+        waitingPageSkip();
+    }
+
+    public void waitingPageSkip()
+    {
+        CountDownTimer timer;
+        timer = new CountDownTimer(10000, 1000)
+        {
+            @Override
+            public void onTick(long millisUntilFinished) {
+//                Toast.makeText(getApplicationContext(), Long.toString(millisUntilFinished) , Toast.LENGTH_SHORT).show();
+            }
+
+            public void onFinish()
+            {
+                setContentView(R.layout.save_page);
+            }
+        }.start();
     }
 }
