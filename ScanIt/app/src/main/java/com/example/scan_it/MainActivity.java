@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         {
             pdfFolder.mkdir();
         }
-            for (int a = 1 ; a <= numPhotos ; a++)
+            for (int a = 0 ; a <= numPhotos ; a++)
             {
                 String photo = rootPath + "/ScansTemp/" + a + ".jpg";
                 bitmap = BitmapFactory.decodeFile(photo);
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         }
         pdf.close();
         setContentView(R.layout.end_page);
+        waitingPageSkipEnd();
      }
      //End PDF
 
