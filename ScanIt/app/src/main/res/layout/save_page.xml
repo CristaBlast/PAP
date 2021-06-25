@@ -36,12 +36,15 @@
         app:srcCompat="@android:drawable/ic_menu_revert" />
 
     <Button
-        android:id="@+id/Save"
+        android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="500dp"
         android:onClick="pdf"
-        android:text="Create PDF" />
+        android:text="Create PDF"
+        android:textColor="#000000"
+        android:visibility="visible"
+        app:backgroundTint="#00FFFFFF" />
 
 </RelativeLayout>

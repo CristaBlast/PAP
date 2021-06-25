@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     //PDF
     public void pdf(View v)
     {
+        Button btnS = findViewById(R.id.btnSave);
+        btnS.setVisibility(View.INVISIBLE);
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
         String pdfName = pdfN.getText().toString();
         Bitmap bitmap;
@@ -203,6 +205,24 @@ public class MainActivity extends AppCompatActivity {
             public void onFinish()
             {
                 setContentView(R.layout.save_page);
+            }
+        }.start();
+    }
+
+    public void waitingPageSkipEnd()
+    {
+        CountDownTimer timer;
+        timer = new CountDownTimer(10000, 1000)
+        {
+            @Override
+            public void onTick(long millisUntilFinished)
+            {
+            }
+
+            public void onFinish()
+            {
+                setContentView(R.layout.welcome_page);
+                numPhotos = 0;
             }
         }.start();
     }
