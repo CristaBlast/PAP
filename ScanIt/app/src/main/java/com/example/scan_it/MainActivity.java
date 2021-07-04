@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         {
             pdfFolder.mkdir();
         }
-            for (int a = 0 ; a <= numPhotos ; a++)
+            for (int a = 0 ; a < numPhotos ; a++)
             {
                 String photo = rootPath + "/ScansTemp/" + a + ".jpg";
                 bitmap = BitmapFactory.decodeFile(photo);
