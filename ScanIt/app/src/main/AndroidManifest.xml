@@ -16,16 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ScanIt">
-<!--            <provider-->
-<!--                android:name="androidx.core.content.FileProvider"-->
-<!--                android:authorities="com.example.android.fileprovider"-->
-<!--                android:exported="false"-->
-<!--                android:grantUriPermissions="true">-->
-<!--                <meta-data-->
-<!--                    android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                    android:resource="@xml/file_paths"></meta-data>-->
-<!--            </provider>-->
-<!--        <activity android:name="net.rdei.android.dirchooser.DirectoryChooserActivity"/>-->
         <activity android:name=".MainActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

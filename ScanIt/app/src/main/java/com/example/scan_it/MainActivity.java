@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         EditText pdfN = (EditText) findViewById(R.id.textBoxPDFName);
         String pdfName = pdfN.getText().toString();
         Bitmap bitmap;
+        Bitmap downScaledPhoto;
         PdfDocument pdf = new PdfDocument();
         File pdfFolder = new File(rootPath + "/ScansPDF");
         if (!pdfFolder.mkdir())
@@ -71,10 +72,21 @@ public class MainActivity extends AppCompatActivity {
             {
                 String photo = rootPath + "/ScansTemp/" + a + ".jpg";
                 bitmap = BitmapFactory.decodeFile(photo);
-                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(bitmap.getWidth(), bitmap.getHeight(), a).create();
+
+
+                float ratio = Math.min((float) 2 / bitmap.getWidth(),(float) 2 / bitmap.getHeight());
+                int width = Math.round((float) ratio * bitmap.getWidth());
+                int height = Math.round((float) ratio * bitmap.getHeight());
+
+                downScaledPhoto = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+
+
+
+                PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(downScaledPhoto.getWidth(), downScaledPhoto.getHeight(), a).create();
                 PdfDocument.Page page = pdf.startPage(pageInfo);
                 Canvas canvas = page.getCanvas();
-                canvas.drawBitmap(bitmap, 0, 0, null);
+                canvas.drawBitmap(downScaledPhoto, 0, 0, null);
                 pdf.finishPage(page);
             }
         File PDFFile = new File(pdfFolder + "/" + pdfName + ".pdf");
@@ -189,25 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goTSavePage(View v)
     {
-        setContentView(R.layout.waiting_page);
-        waitingPageSkip();
-    }
-
-    public void waitingPageSkip()
-    {
-        CountDownTimer timer;
-        timer = new CountDownTimer(10000, 1000)
-        {
-            @Override
-            public void onTick(long millisUntilFinished) {
-//                Toast.makeText(getApplicationContext(), Long.toString(millisUntilFinished) , Toast.LENGTH_SHORT).show();
-            }
-
-            public void onFinish()
-            {
-                setContentView(R.layout.save_page);
-            }
-        }.start();
+        setContentView(R.layout.save_page);
     }
 
     public void waitingPageSkipEnd()

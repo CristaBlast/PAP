@@ -3,16 +3,11 @@ package com.example.scan_it;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.hardware.Camera;
-import android.os.Environment;
-import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import androidx.annotation.NonNull;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback
@@ -30,8 +25,6 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceChanged(@NonNull SurfaceHolder holder, int format, int width, int height) {
 
     }
-
-
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder holder) {
@@ -61,7 +54,6 @@ public class ShowCamera extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder holder) {
-//        camera.stopPreview();
-//        camera.release();
+
     }
 }
